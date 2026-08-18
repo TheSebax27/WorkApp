@@ -18,7 +18,6 @@ export function Login() {
     const fn = mode === 'login' ? signIn : signUp
     const { error } = await fn(email, password)
     if (error) setMsg(error.message)
-    else if (mode === 'register') setMsg('Revisa tu email para confirmar la cuenta.')
     setLoading(false)
   }
 
