@@ -63,35 +63,10 @@ export async function fetchAdzunaJobs(
   })
 }
 
-export async function fetchArbeitnowJobs(userStack: string[] = []): Promise<Job[]> {
-  const res = await fetch('https://arbeitnow.com/api/job-board-api')
-  const data = await res.json()
-  return ((data.data || []) as Array<{
-    slug: string; title: string; company_name: string; location: string; url: string
-    description: string; tags: string[]; remote: boolean; created_at: number
-  }>).map(j => ({
-    id: `arbeitnow-${j.slug}`,
-    fuente: 'arbeitnow' as const,
-    titulo: j.title,
-    empresa: j.company_name,
-    pais: j.location || 'Europa',
-    url: j.url,
-    descripcion: j.description,
-    tags: j.tags || [],
-    remoto: j.remote,
-    salario_min: null,
-    salario_max: null,
-    moneda: 'EUR',
-    score: calcScore(j.tags || [], userStack),
-    fecha_publicacion: new Date(j.created_at * 1000).toISOString().split('T')[0],
-    fecha_scrape: new Date().toISOString(),
-  }))
-}
-
+// Arbeitnow bloqueada por CORS desde el browser — se puede consumir desde una Edge Function
 export async function fetchAllJobs(userStack: string[] = []): Promise<Job[]> {
   const results = await Promise.allSettled([
     fetchRemotiveJobs(userStack),
-    fetchArbeitnowJobs(userStack),
   ])
   const jobs: Job[] = []
   results.forEach(r => { if (r.status === 'fulfilled') jobs.push(...r.value) })
