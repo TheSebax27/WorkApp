@@ -1,3 +1,8 @@
+# Variables de entorno (NUNCA subir)
+.env
+.env.local
+.env.*.local
+
 # Logs
 logs
 *.log
